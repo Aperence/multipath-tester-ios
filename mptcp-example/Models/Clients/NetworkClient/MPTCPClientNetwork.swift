@@ -11,6 +11,7 @@ import Network
 enum RequestNetworkError: Error{
     case emptyBody
     case invalidStatusCode(Int)
+    case failedToConnect
 }
 
 extension RequestNetworkError: LocalizedError{
@@ -20,6 +21,8 @@ extension RequestNetworkError: LocalizedError{
                 return NSLocalizedString("Failed to fetch data from the server, received status code \(code)", comment: "Fetching error")
             case .emptyBody:
                 return NSLocalizedString("Received empty body", comment: "Fetching error")
+            case .failedToConnect:
+                return NSLocalizedString("Failed to connect to the server", comment: "")
             }
         }
 }
@@ -54,7 +57,7 @@ struct MPTCPClientNetwork: MPTCPClient{
     }
     
     func fetch(url: URL) async throws -> Data {
-        let client = NetworkClient(to: .url(url), params: params)
+        let client = try NetworkClient(to: .url(url), params: params)
         
         var path = url.path()
         if path == "" { path = "/" }

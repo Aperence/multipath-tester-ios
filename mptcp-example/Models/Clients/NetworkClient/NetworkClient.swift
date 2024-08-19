@@ -13,7 +13,7 @@ public class NetworkClient{
     var queue: DispatchQueue
     var ready: Bool = false
     
-    public init(to server: NWEndpoint, params: NWParameters = .tls){
+    public init(to server: NWEndpoint, params: NWParameters = .tls) throws{
         queue = DispatchQueue(label: "MPTCP client Queue")
         let semaphore = DispatchSemaphore(value: 0)
 
@@ -33,7 +33,10 @@ public class NetworkClient{
         }
         
         connection.start(queue: queue)
-        semaphore.wait()
+        let res = semaphore.wait(timeout: DispatchTime.now().advanced(by: DispatchTimeInterval.seconds(3)))
+        if res == .timedOut{
+            throw RequestNetworkError.failedToConnect
+        }
     }
     
     func receive(onData: @escaping (Data) -> Void, onComplete: @escaping () -> Void){
