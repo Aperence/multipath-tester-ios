@@ -6,8 +6,9 @@
 
 This app allows to check if MPTCP is used on your device or not. To do so, simply go on the tab "Check MPTCP", and you can select different clients/mode of MPTCP to check if they are working. Note that the aggregate mode doesn't seem to be working, as the [MPTCP entitlement may be missing](https://developer.apple.com/documentation/foundation/urlsessionconfiguration/improving_network_reliability_using_multipath_tcp). A demo of this screen is available [here](./demos/mptcp-check.mov). Until now, the following network clients can be used with MPTCP and examples of such MPTCP clients can be found in the [Clients folder](./mptcp-example/Models/Clients):
 
-- URLSession
-- Alamofire
+- [URLSession](https://developer.apple.com/documentation/foundation/urlsession)
+- [Alamofire](https://github.com/Alamofire/Alamofire)
+- [Network framework](https://developer.apple.com/documentation/network)
 
 Feel free to add other clients to this list in the future!
 

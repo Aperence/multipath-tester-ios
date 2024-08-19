@@ -17,7 +17,11 @@ protocol MPTCPClient: Identifiable{
 }
 
 struct ContainerClient : Identifiable, Hashable, Codable{
-    static let client_list = [ContainerClient(client: URLSessionClient()), ContainerClient(client: AlamofireClient())]
+    static let client_list = [
+        ContainerClient(client: URLSessionClient()),
+        ContainerClient(client: AlamofireClient()),
+        ContainerClient(client: MPTCPClientNetwork())
+    ]
     
     static func == (lhs: ContainerClient, rhs: ContainerClient) -> Bool {
         rhs.id == lhs.id
