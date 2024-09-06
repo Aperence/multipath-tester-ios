@@ -20,6 +20,12 @@ Another screen of the app is the benchmarking one. On this screen, you can evalu
 
 Having simply the results in the app may be a bit limitating, so you have the possibilty to export the results of experiments in a json file. This allow to use these data to do plots, and further analysis of the results. The demo is available [here](./demos/mptcp-export.mov). Note however that the data is shared between session, so don't worry about losing any data.
 
+### Sending data to a server
+
+You also have the possibility to send the measures done to an external server. An example of such a server is provided
+in the [backend](./backend/) folder, which can be run using `python -m flask --host 0.0.0.0 --port 8080`. Once you have a running server, you simply need to change the environment variables in the xcode scheme to set accordingly the
+`UPLOAD_HOST` and `UPLOAD_PATH` variables.
+
 ## App preview
 
 <img src="./imgs/mptcp-check.png" height="700">
