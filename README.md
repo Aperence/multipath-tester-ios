@@ -12,7 +12,11 @@ This app allows to check if MPTCP is used on your device or not. To do so, simpl
 
 Feel free to add other clients to this list in the future!
 
-### Running benchmarks to evaluate MPTCP
+### Get a website page using Quiche
+
+This app also allows to use Quiche to get html pages and display them. To do so, simply select one of the URLs available, or enter your custom URL, then press the fetch button. After the request has been completed, the HTML received should display below (See [the app preview](#app-preview) for an example).
+
+### Running benchmarks to evaluate MPTCP/QUIC
 
 Another screen of the app is the benchmarking one. On this screen, you can evaluate the performances of using or not MPTCP, by doing some download of various size (1, 10, 100 or 1000 MB). You can also select the number of times this download should be performed, to increase the reliability of results by doing multiple times the measurement. After this, you'll have a report of the results available, showing the response time and estimated bandwidth of the different request, as well as the mean response time and bandwidth once again. You can also delete some measurements that you did. [Here](./demos/mptcp-new-benchmark.mov) is a demo of this feature.
 
@@ -29,6 +33,15 @@ in the [backend](./backend/) folder, which can be run using `python -m flask --h
 ## App preview
 
 <img src="./imgs/mptcp-check.png" height="700">
+<img src="./imgs/quiche-screen.jpeg" height="700">
 <img src="./imgs/mptcp-benchmark-list.png" height="700">
 <img src="./imgs/mptcp-benchmark-new.png" height="700">
 <img src="./imgs/mptcp-benchmark-details.png" height="700">
+
+## Building the app
+
+1) Build the dependencies by running `./build-dependencies.sh`
+2) Add the `Quiche` and `Ev` frameworks that were built in [1](#1). to the dependencies
+   of your project
+![](./imgs/add-framework.png)
+3) Select a real device, and click the run button (note that it doesn't work on simulated devices)
