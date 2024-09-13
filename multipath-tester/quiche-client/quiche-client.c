@@ -38,6 +38,9 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
+#include <ifaddrs.h>
+#include <arpa/inet.h>
+#include <net/if.h>
 
 #include <ev.h>
 
@@ -58,6 +61,13 @@ typedef struct response{
     response_part_t *tail;
     ssize_t total_len;
 }response_t;
+
+typedef struct ip_addr_itf{
+    struct sockaddr_storage wifi;
+    socklen_t wifi_len;
+    struct sockaddr_storage cellular;
+    socklen_t cellular_len;
+}ip_addr_itf_t;
 
 struct conn_io {
     ev_timer timer;
@@ -135,8 +145,84 @@ http_response_t *new_response(int status, uint8_t *res, ssize_t len){
     return response;
 }
 
+static void print_ip_addr(struct sockaddr *addr){
+    char s[INET6_ADDRSTRLEN > INET_ADDRSTRLEN ? INET6_ADDRSTRLEN : INET_ADDRSTRLEN];
+
+    switch(addr->sa_family) {
+        case AF_INET: {
+            struct sockaddr_in *addr_in = (struct sockaddr_in *) addr;
+
+            ////char s[INET_ADDRSTRLEN] = '\0';
+                // this is large enough to include terminating null
+
+            inet_ntop(AF_INET, &(addr_in->sin_addr), s, INET_ADDRSTRLEN);
+            break;
+        }
+        case AF_INET6: {
+            struct sockaddr_in6 *addr_in6 = (struct sockaddr_in6 *) addr;
+            
+            ////char s[INET6_ADDRSTRLEN] = '\0';
+                // not sure if large enough to include terminating null?
+
+            inet_ntop(AF_INET6, &(addr_in6->sin6_addr), s, INET6_ADDRSTRLEN);
+            break;
+        }
+        default:
+            break;
+    }
+    printf("IP address: %s\n", s);
+}
+
+ip_addr_itf_t *get_addrs(int family){
+    ip_addr_itf_t *ret = malloc(sizeof(ip_addr_itf_t));
+    memset(ret, 0, sizeof(ip_addr_itf_t));
+
+    struct ifaddrs *ifaddr;
+
+    if (getifaddrs(&ifaddr) == -1) {
+        perror("getifaddrs");
+        return NULL;
+    }
+
+    for (struct ifaddrs *ifa = ifaddr; ifa != NULL;
+             ifa = ifa->ifa_next) {
+        if (ifa->ifa_addr == NULL || ifa->ifa_addr->sa_family != family)
+            continue;
+        
+        if (family == AF_INET6){
+            struct sockaddr_in6 *temp = (struct sockaddr_in6 *) ifa->ifa_addr;
+            if (IN6_IS_ADDR_LINKLOCAL(&temp->sin6_addr)){
+                // Link local address, skip
+                continue;
+            }
+        }
+
+        struct sockaddr_storage *addr;
+        socklen_t *len;
+        if (strncmp(ifa->ifa_name, "en", 2) == 0 && ret->wifi_len == 0){
+            addr = &ret->wifi;
+            len = &ret->wifi_len;
+        }else if (strncmp(ifa->ifa_name, "pdp_ip", 6) == 0 && ret->cellular_len == 0){
+            addr = &ret->cellular;
+            len = &ret->cellular_len;
+        }else{
+            continue;
+        }
+        
+        *len = (family == AF_INET) ? sizeof(struct sockaddr_in) : sizeof(struct sockaddr_in6);
+        memcpy(addr, ifa->ifa_addr, *len);
+    }
+
+    freeifaddrs(ifaddr);
+    
+    return ret;
+}
+
 static void debug_log(const char *line, void *argp) {
     fprintf(stderr, "%s\n", line);
+}
+
+static void handle_path_events(struct conn_io *conn){
 }
 
 static void flush_egress(struct ev_loop *loop, struct conn_io *conn_io) {
@@ -438,6 +524,8 @@ http_response_t *quiche_fetch(const char *host, const char *port, const char *pa
         char *msg = "failed to resolve host";
         return new_response(-1, (uint8_t *) msg, strlen(msg));
     }
+    
+    // ip_addr_itf_t *ips = get_addrs(peer->ai_family);
 
     int sock = socket(peer->ai_family, SOCK_DGRAM, 0);
     if (sock < 0) {
@@ -447,6 +535,26 @@ http_response_t *quiche_fetch(const char *host, const char *port, const char *pa
 
     if (fcntl(sock, F_SETFL, O_NONBLOCK) != 0) {
         char *msg = "failed to make socket non-blocking";
+        return new_response(-1, (uint8_t *) msg, strlen(msg));
+    }
+    
+    /*
+    if (ips->wifi_len != 0){
+        printf("Using Wifi itf\n");
+        bind(sock, (struct sockaddr *) &ips->wifi, ips->wifi_len);
+    }else{
+        printf("Using cellular itf\n");
+        bind(sock, (struct sockaddr *) &ips->cellular, ips->cellular_len);
+    }*/
+    
+    const char* device_name = "en0"; // wifi
+    //const char* device_name = "pdp_ip0"; // cellular
+    int interfaceIndex = if_nametoindex(device_name);
+    
+    if (setsockopt(sock, peer->ai_family == AF_INET6 ? IPPROTO_IPV6 : IPPROTO_IP,
+                   peer->ai_family == AF_INET6 ? IPV6_BOUND_IF : IP_BOUND_IF,
+                   &interfaceIndex, sizeof(interfaceIndex)) != 0){
+        char *msg = "failed to bind socket to wifi";
         return new_response(-1, (uint8_t *) msg, strlen(msg));
     }
 
@@ -503,6 +611,8 @@ http_response_t *quiche_fetch(const char *host, const char *port, const char *pa
         char *msg = "failed to get local address of socket";
         return new_response(-1, (uint8_t *) msg, strlen(msg));
     };
+    
+    print_ip_addr((struct sockaddr *) &conn_io->local_addr);
 
     quiche_conn *conn = quiche_connect(host, (const uint8_t *) scid, sizeof(scid),
                                        (struct sockaddr *) &conn_io->local_addr,
