@@ -17,12 +17,10 @@ protocol QuicClient: MultipathClient, Identifiable{
 }
 
 extension QuicClient{
-    var hasMode: Bool{
-        false
-    }
-    
-    var transfers: [any Transfer]{
-        QuicTransfer.allCases
+    var transfers: [TransferWrapper]{
+        QuicTransfer.allCases.map{t in
+            TransferWrapper(transfer: t)
+        }
     }
 }
 

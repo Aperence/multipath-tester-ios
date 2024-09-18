@@ -77,7 +77,7 @@ struct NewBenchmarkView: View {
     
     func fetch() async throws -> UInt64{
         let start = DispatchTime.now()
-        let _ = try await measure.client.fetch(url: measure.transfer.url)
+        let _ = try await measure.client.fetch(url: measure.client.transfer.transfer.url)
         let end = DispatchTime.now()
         
         return (end.uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000

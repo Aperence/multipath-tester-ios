@@ -16,17 +16,24 @@ struct NewMeasureView: View {
         Form{
             List{
                 Section("Client"){
-                    ClientSelectionView(client: $measure.client){}
-                }
-                
-                if measure.client.hasMode{
-                    Section("MPTCP Mode"){
-                        MPTCPModeSelectionView(mptcp_mode: $measure.mode){}
+                    ClientSelectionView(client: $measure.client){
                     }
                 }
                 
+                ForEach($measure.client.options, id: \.id){ $option in
+                    HStack{
+                        Picker("Value", selection: $option.value) {
+                            ForEach(option.values){ val in
+                                Text(val.wrapped.name).tag(val)
+                            }
+                        }
+                    }
+                    Text(option.value.wrapped.description)
+                }
+
+                
                 Section("Transfer"){
-                    TransferSelectionView(transfers: measure.client.transfers, transfer: $measure.transfer){}
+                    TransferSelectionView(client: $measure.client)
                 }
                 
                 Section("Number of requests"){

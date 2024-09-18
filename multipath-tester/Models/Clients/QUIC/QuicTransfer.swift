@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum QuicTransfer: String, Identifiable, CaseIterable, Transfer{
+enum QuicTransfer: String, Transfer{
     var name: String{
         self.rawValue
     }
@@ -22,6 +22,10 @@ enum QuicTransfer: String, Identifiable, CaseIterable, Transfer{
     
     var id: String{
         rawValue
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
     
     // list taken from https://bagder.github.io/HTTP3-test/

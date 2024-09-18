@@ -32,31 +32,15 @@ struct MPTCPClientNetwork: MPTCPClient{
     
     var id: String { name }
     
-    var params: NWParameters = .tls
-    var _mode: URLSessionConfiguration.MultipathServiceType = .handover
+    var options: [any Option] = [MultipathMode(value: .none)]
+    var transfer: TransferWrapper = TransferWrapper(transfer: MPTCPTransfers.check)
     
-    var mode: URLSessionConfiguration.MultipathServiceType{
-        set{
-            _mode = newValue
-            switch newValue{
-                case .none:
-                    params.multipathServiceType = .disabled
-                case .handover:
-                    params.multipathServiceType = .handover
-                case .interactive:
-                    params.multipathServiceType = .interactive
-                case .aggregate:
-                    params.multipathServiceType = .aggregate
-                @unknown default:
-                    fatalError()
-            }
-        }
-        get{
-            return _mode
-        }
-    }
+    var params: NWParameters = .tls
     
     func fetch(url: URL) async throws -> Data {
+        options.forEach{ option in
+            option.apply(client: self)
+        }
         let client = try NetworkClient(to: .url(url), params: params)
         
         var path = url.path()

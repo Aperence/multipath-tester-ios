@@ -12,24 +12,16 @@ struct AlamofireClient : MPTCPClient{
     
     var name: String = "AlamofireClient"
     var id: String { name }
+    var transfer: TransferWrapper = TransferWrapper(transfer: MPTCPTransfers.check)
     
-    private var session: Session = Session.default
+    var options: [any Option] = [MultipathMode(value: .none)]
     
-    private var _mode: URLSessionConfiguration.MultipathServiceType = .none
-    
-    var mode: URLSessionConfiguration.MultipathServiceType{
-        set{
-            _mode = newValue
-            let conf = URLSessionConfiguration.default
-            conf.multipathServiceType = _mode
-            session = Session(configuration: conf)
-        }
-        get{
-            return _mode
-        }
-    }
+    var session: Session = Session.default
     
     func fetch(url: URL) async throws -> Data {
+        options.forEach{ option in
+            option.apply(client: self)
+        }
         // get a shorter description to know if we are using mptcp
         let headers: HTTPHeaders = [
             "User-Agent": "curl/7.54.1",

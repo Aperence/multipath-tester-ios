@@ -15,7 +15,7 @@ extension URLSessionConfiguration.MultipathServiceType : Identifiable{
     public var id: Self { self }
 }
 
-extension URLSessionConfiguration.MultipathServiceType{
+extension URLSessionConfiguration.MultipathServiceType: Describable{
     var name: String {
         switch self{
         case .none:

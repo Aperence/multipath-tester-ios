@@ -11,24 +11,16 @@ struct URLSessionClient : MPTCPClient{
     
     var name: String = "URLSessionClient"
     var id: String { name }
+    var transfer: TransferWrapper = TransferWrapper(transfer: MPTCPTransfers.check)
     
-    private var session: URLSession = URLSession.shared
+    var options: [any Option] = [MultipathMode(value: .none)]
     
-    private var _mode: URLSessionConfiguration.MultipathServiceType = .none
-    
-    var mode: URLSessionConfiguration.MultipathServiceType{
-        set{
-            _mode = newValue
-            let conf = URLSessionConfiguration.default
-            conf.multipathServiceType = _mode
-            session = URLSession(configuration: conf)
-        }
-        get{
-            return _mode
-        }
-    }
+    var session: URLSession = URLSession.shared
     
     func fetch(url: URL) async throws -> Data {
+        options.forEach{ option in
+            option.apply(client: self)
+        }
         var req = URLRequest(url: url)
         // get a shorter description to know if we are using mptcp
         req.addValue("curl/7.54.1", forHTTPHeaderField: "User-Agent")

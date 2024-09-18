@@ -21,14 +21,17 @@ extension QuicheError: LocalizedError{
 }
 
 struct QuicheClient: QuicClient{
-    
     var name: String = "quiche"
-    
     var id: String { name }
+    var options: [any Option] = []
+    var transfer: TransferWrapper = TransferWrapper(transfer: QuicTransfer.aioquic)
     
     var mode: URLSessionConfiguration.MultipathServiceType = .none
     
     func fetch(url: URL) async throws -> Data {
+        options.forEach{ option in
+            option.apply(client: self)
+        }
         let host = Utils.makeCString(from: url.host()!)
         let port = Utils.makeCString(from: "443")
         var pathString = url.path()

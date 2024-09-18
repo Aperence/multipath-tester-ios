@@ -30,6 +30,11 @@
 		1B6BA5FA2C8E1E24007FC35A /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B6BA5F92C8E1E24007FC35A /* Utils.swift */; };
 		1B90EBD42C5BC9420003AB87 /* BenchmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90EBD32C5BC9420003AB87 /* BenchmarkView.swift */; };
 		1B90EBD62C5BCE360003AB87 /* NewBenchmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B90EBD52C5BCE360003AB87 /* NewBenchmarkView.swift */; };
+		1BB17D692C9AF048008CEDAE /* OptionsSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB17D682C9AF048008CEDAE /* OptionsSelection.swift */; };
+		1BB17D6B2C9AF952008CEDAE /* OptionSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB17D6A2C9AF952008CEDAE /* OptionSelection.swift */; };
+		1BB17D6D2C9B1196008CEDAE /* OptionsDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB17D6C2C9B1196008CEDAE /* OptionsDisplay.swift */; };
+		1BB17D6F2C9B15EA008CEDAE /* OptionDisplay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB17D6E2C9B15EA008CEDAE /* OptionDisplay.swift */; };
+		1BB17D712C9B1691008CEDAE /* MeasureList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BB17D702C9B1691008CEDAE /* MeasureList.swift */; };
 		1BCE936A2C5BC2C6006820CA /* mptcp_exampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCE93692C5BC2C6006820CA /* mptcp_exampleApp.swift */; };
 		1BCE936C2C5BC2C6006820CA /* CheckMPTCPView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BCE936B2C5BC2C6006820CA /* CheckMPTCPView.swift */; };
 		1BCE936E2C5BC2C7006820CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1BCE936D2C5BC2C7006820CA /* Assets.xcassets */; };
@@ -92,6 +97,11 @@
 		1B7608392C5D224E007F37AE /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
 		1B90EBD32C5BC9420003AB87 /* BenchmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BenchmarkView.swift; sourceTree = "<group>"; };
 		1B90EBD52C5BCE360003AB87 /* NewBenchmarkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewBenchmarkView.swift; sourceTree = "<group>"; };
+		1BB17D682C9AF048008CEDAE /* OptionsSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsSelection.swift; sourceTree = "<group>"; };
+		1BB17D6A2C9AF952008CEDAE /* OptionSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSelection.swift; sourceTree = "<group>"; };
+		1BB17D6C2C9B1196008CEDAE /* OptionsDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsDisplay.swift; sourceTree = "<group>"; };
+		1BB17D6E2C9B15EA008CEDAE /* OptionDisplay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionDisplay.swift; sourceTree = "<group>"; };
+		1BB17D702C9B1691008CEDAE /* MeasureList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureList.swift; sourceTree = "<group>"; };
 		1BCE93662C5BC2C6006820CA /* multipath-tester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "multipath-tester.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1BCE93692C5BC2C6006820CA /* mptcp_exampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mptcp_exampleApp.swift; sourceTree = "<group>"; };
 		1BCE936B2C5BC2C6006820CA /* CheckMPTCPView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckMPTCPView.swift; sourceTree = "<group>"; };
@@ -285,6 +295,11 @@
 				1BDB6D002C5C10570029A10D /* MeasureView.swift */,
 				1B499A802C5CE23000744D38 /* NewMeasureView.swift */,
 				1B6BA5D82C8DFB5E007FC35A /* HTMLStringView.swift */,
+				1BB17D682C9AF048008CEDAE /* OptionsSelection.swift */,
+				1BB17D6A2C9AF952008CEDAE /* OptionSelection.swift */,
+				1BB17D6C2C9B1196008CEDAE /* OptionsDisplay.swift */,
+				1BB17D6E2C9B15EA008CEDAE /* OptionDisplay.swift */,
+				1BB17D702C9B1691008CEDAE /* MeasureList.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -383,8 +398,10 @@
 				1B90EBD62C5BCE360003AB87 /* NewBenchmarkView.swift in Sources */,
 				1BCE93812C5BC36C006820CA /* Transfer.swift in Sources */,
 				1B6BA5F22C8E0887007FC35A /* QuicTransfer.swift in Sources */,
+				1BB17D6F2C9B15EA008CEDAE /* OptionDisplay.swift in Sources */,
 				1BCE938B2C5BC3FA006820CA /* MPTCPModeSelectionView.swift in Sources */,
 				1B6BA5D42C8DFAEB007FC35A /* quiche-client.c in Sources */,
+				1BB17D6D2C9B1196008CEDAE /* OptionsDisplay.swift in Sources */,
 				1BCE936C2C5BC2C6006820CA /* CheckMPTCPView.swift in Sources */,
 				1BCE938D2C5BC40F006820CA /* ResultsView.swift in Sources */,
 				1BCE937B2C5BC338006820CA /* AlamofireClient.swift in Sources */,
@@ -392,9 +409,12 @@
 				1BDB6CFF2C5C0ABD0029A10D /* Measure.swift in Sources */,
 				1BCE936A2C5BC2C6006820CA /* mptcp_exampleApp.swift in Sources */,
 				1B6BA5ED2C8DFF28007FC35A /* MultipathClient.swift in Sources */,
+				1BB17D712C9B1691008CEDAE /* MeasureList.swift in Sources */,
 				1BCE93872C5BC3D6006820CA /* ClientSelectionView.swift in Sources */,
+				1BB17D692C9AF048008CEDAE /* OptionsSelection.swift in Sources */,
 				1BCE937D2C5BC34A006820CA /* MPTCPClient.swift in Sources */,
 				1B90EBD42C5BC9420003AB87 /* BenchmarkView.swift in Sources */,
+				1BB17D6B2C9AF952008CEDAE /* OptionSelection.swift in Sources */,
 				1BCE93842C5BC3A3006820CA /* MultipathServiceType+Name.swift in Sources */,
 				1BD383292C6F513E009DCFA5 /* HTTPResponse.swift in Sources */,
 				1B6BA5DB2C8DFB70007FC35A /* QuicView.swift in Sources */,

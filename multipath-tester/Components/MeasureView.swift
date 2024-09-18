@@ -28,13 +28,11 @@ struct MeasureView: View {
             Section("Client"){
                 Text(measure.client.name)
             }
-            if measure.client.hasMode{
-                Section("Mode"){
-                    Text(measure.client.mode.name)
-                }
-            }
+            
+            OptionsDisplay(client: measure.client)
+            
             Section("Transfer"){
-                Text(measure.transfer.name)
+                Text(measure.client.transfer.transfer.name)
             }
             Section("Statistics"){
                 HStack{

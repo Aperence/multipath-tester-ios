@@ -27,12 +27,7 @@ struct CheckMPTCPView: View {
                         }, mptcpOnly: true)
                     }
                     
-                    Section("MPTCP Mode"){
-                        MPTCPModeSelectionView(mptcp_mode: $client.mode){
-                            refresh()
-                        }
-                        Text(client.mode.description)
-                    }
+                    OptionsSelection(client: $client)
 
                     Section("Results"){
                         if loading{

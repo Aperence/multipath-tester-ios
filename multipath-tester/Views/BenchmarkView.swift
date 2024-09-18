@@ -29,15 +29,7 @@ struct BenchmarkView: View {
     var body: some View {
         NavigationStack{
             List{
-                ForEach($measures){ $measure in
-                    NavigationLink(destination: {
-                        MeasureView(measure: $measure)
-                    }, label: {
-                        Text("\(measure.client.name), \(measure.mode.name), \(measure.transfer.name)")
-                    })
-                }.onDelete(perform: { indexSet in
-                    measures.remove(atOffsets: indexSet)
-                })
+                MeasureList(measures: $measures)
             }.sheet(isPresented: $showingRunBenchmark, onDismiss: {
                 showingRunBenchmark = false
             }, content: {
@@ -76,22 +68,7 @@ struct BenchmarkView: View {
             }.alert("Send measurements to the remove server \(data_server_url) ?", isPresented: $showingAlertSendData) {
                 Button("Cancel", role: .cancel) {}
                 Button("Send measurements") {
-                    do{
-                        let req = try URLRequest(url: "\(data_server_url)\(path)", method: .post);
-                        let task = URLSession.shared.uploadTask(with: req, from: try JSONEncoder().encode(measures)){ data, response, error in
-                            if let error = error {
-                                errorSending = error
-                                showingFailedSendingData = true
-                                return
-                            }
-                            
-                            showingSuccessSendingData = true
-                        }
-                        task.resume()
-                    }catch{
-                        errorSending = error
-                        showingFailedSendingData = true
-                    }
+                    send_measures()
                 }
             }
             .alert("Failed to send the measurements", isPresented: $showingFailedSendingData, presenting: $errorSending) { _ in
@@ -100,6 +77,25 @@ struct BenchmarkView: View {
             .alert("Sent successfully the measurements", isPresented: $showingSuccessSendingData) {
                 Button("Ok", role: .cancel) {}
             }
+        }
+    }
+    
+    func send_measures(){
+        do{
+            let req = try URLRequest(url: "\(data_server_url)\(path)", method: .post);
+            let task = URLSession.shared.uploadTask(with: req, from: try JSONEncoder().encode(measures)){ data, response, error in
+                if let error = error {
+                    errorSending = error
+                    showingFailedSendingData = true
+                    return
+                }
+                
+                showingSuccessSendingData = true
+            }
+            task.resume()
+        }catch{
+            errorSending = error
+            showingFailedSendingData = true
         }
     }
 }
